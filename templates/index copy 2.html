@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Processing</title>
+    <style>
+      #loader {
+        display: none;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 120px;
+        height: 120px;
+        animation: spin 1s linear infinite;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -60px;
+        margin-left: -60px;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Process Image</h1>
+    <input type="text" id="image-url" placeholder="Enter image URL" size="50" />
+    <button onclick="processImage()">Process Image</button>
+    <div id="loader"></div>
+    <div id="result"></div>
+
+    <script>
+      async function processImage() {
+        const url = document.getElementById("image-url").value;
+        document.getElementById("loader").style.display = "block";
+        try {
+          const response = await fetch("/process-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image_url: url }),
+          });
+          const data = await response.json();
+          document.getElementById("result").innerHTML = `
+                    <p>${data.formatted_output}</p>
+                    <p>จังหวัด : ${data.corrected_word}</p>
+                `;
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("result").innerHTML = "An error occurred.";
+        } finally {
+          document.getElementById("loader").style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

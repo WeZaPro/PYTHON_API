@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>License Plate Detection</title>
+  </head>
+  <body>
+    <h1>Upload Image URL</h1>
+    <form method="post">
+      <input
+        type="text"
+        name="image_url"
+        placeholder="Enter image URL"
+        required
+      />
+      <button type="submit">Submit</button>
+    </form>
+
+    {% if formatted_output and corrected_word %}
+    <h2>Results</h2>
+    <p>{{ formatted_output }}</p>
+    <p>จังหวัด : {{ corrected_word }}</p>
+    {% endif %}
+  </body>
+</html>

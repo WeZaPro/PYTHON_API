@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>License Plate Recognition</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0;
+        color: #333;
+      }
+      .container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        text-align: center;
+        max-width: 600px;
+        width: 100%;
+      }
+      h1 {
+        margin-bottom: 20px;
+        color: #3498db;
+      }
+      input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 10px 20px;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+      button:hover {
+        background-color: #2980b9;
+      }
+      #loader {
+        display: none;
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+      #result {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+      #result p {
+        margin: 10px 0;
+      }
+      #preview {
+        margin-top: 20px;
+      }
+      #preview img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>โปรแกรมตรวจจับป้ายทะเบียน</h1>
+      <h3>License Plate Recognition</h3>
+      <input
+        type="text"
+        id="image-url"
+        placeholder="Enter image URL"
+        oninput="previewImage()"
+      />
+      <button onclick="processImage()">Process Image</button>
+      <div id="loader"></div>
+      <div id="preview"></div>
+      <div id="result"></div>
+    </div>
+
+    <script>
+      function previewImage() {
+        const imageUrl = document.getElementById("image-url").value;
+        const previewDiv = document.getElementById("preview");
+
+        // Clear previous preview
+        previewDiv.innerHTML = "";
+
+        if (imageUrl) {
+          // Create an image element
+          const img = document.createElement("img");
+          img.src = imageUrl;
+          img.alt = "Image preview";
+          img.onload = () => previewDiv.appendChild(img);
+          img.onerror = () => (previewDiv.innerHTML = "Invalid image URL");
+        }
+      }
+
+      async function processImage() {
+        const url = document.getElementById("image-url").value;
+        document.getElementById("loader").style.display = "block";
+        try {
+          const response = await fetch("/process-image", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image_url: url }),
+          });
+          const data = await response.json();
+          document.getElementById("result").innerHTML = `
+                    <H1>${data.license_plate}</H1>
+                    <h1>${data.country}</h1>
+                `;
+        } catch (error) {
+          console.error("Error:", error);
+          document.getElementById("result").innerHTML = "An error occurred.";
+        } finally {
+          document.getElementById("loader").style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>
