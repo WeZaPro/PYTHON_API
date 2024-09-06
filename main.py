@@ -5,13 +5,13 @@ from PIL import Image
 from io import BytesIO
 import torch
 import easyocr
-from fuzzywuzzy import process  # นำเข้า fuzzywuzzy
+# from fuzzywuzzy import process  # นำเข้า fuzzywuzzy
 # from pathlib import Path
 
 app = Flask(__name__)
 
-get_model_id= "lpr-p9o6t/1"
-get_api_key="0FXo3Oxzy9kwEkpI1j0u"
+# get_model_id= "lpr-p9o6t/1"
+# get_api_key="0FXo3Oxzy9kwEkpI1j0u"
 
 # Initialize the client with API details
 # CLIENT = InferenceHTTPClient(
